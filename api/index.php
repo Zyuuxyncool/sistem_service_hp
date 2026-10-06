@@ -34,38 +34,42 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') == "1") {
     }
 
     // Map Vercel Postgres URL to Laravel's DB_URL
+    $dbUrls = [];
     if (isset($_ENV['DATABASE_URL']) || getenv('DATABASE_URL')) {
-        $dbUrl = isset($_ENV['DATABASE_URL']) ? $_ENV['DATABASE_URL'] : getenv('DATABASE_URL');
-        
-        // Neon SNI workaround for Vercel's older libpq
-        if (strpos($dbUrl, 'neon.tech') !== false) {
-            $parsed = parse_url($dbUrl);
-            if (isset($parsed['host'])) {
-                $endpoint = explode('.', $parsed['host'])[0];
-                // Append to sslmode to avoid Laravel array_diff_key crash on 'options'
-                $dbUrl = str_replace('sslmode=require', 'sslmode=require;options=endpoint%3D' . $endpoint, $dbUrl);
-            }
-        }
-
-        putenv("DB_URL={$dbUrl}");
-        $_ENV['DB_URL'] = $dbUrl;
-        $_SERVER['DB_URL'] = $dbUrl;
+        $dbUrls[] = isset($_ENV['DATABASE_URL']) ? $_ENV['DATABASE_URL'] : getenv('DATABASE_URL');
     }
     if (isset($_ENV['POSTGRES_URL']) || getenv('POSTGRES_URL')) {
-        $dbUrl = isset($_ENV['POSTGRES_URL']) ? $_ENV['POSTGRES_URL'] : getenv('POSTGRES_URL');
+        $dbUrls[] = isset($_ENV['POSTGRES_URL']) ? $_ENV['POSTGRES_URL'] : getenv('POSTGRES_URL');
+    }
+
+    if (!empty($dbUrls)) {
+        $dbUrl = $dbUrls[0];
+        $sslmode = 'prefer'; // default
         
         // Neon SNI workaround for Vercel's older libpq
         if (strpos($dbUrl, 'neon.tech') !== false) {
             $parsed = parse_url($dbUrl);
             if (isset($parsed['host'])) {
                 $endpoint = explode('.', $parsed['host'])[0];
-                $dbUrl = str_replace('sslmode=require', 'sslmode=require;options=endpoint%3D' . $endpoint, $dbUrl);
+                $sslmode = 'require;options=endpoint%3D' . $endpoint;
+            }
+            // Remove sslmode from DB_URL so Laravel doesn't override DB_SSLMODE
+            $dbUrl = str_replace('?sslmode=require', '', $dbUrl);
+            $dbUrl = str_replace('&sslmode=require', '', $dbUrl);
+            $dbUrl = str_replace('sslmode=require', '', $dbUrl);
+        } else {
+            if (strpos($dbUrl, 'sslmode=require') !== false) {
+                $sslmode = 'require';
             }
         }
 
         putenv("DB_URL={$dbUrl}");
         $_ENV['DB_URL'] = $dbUrl;
         $_SERVER['DB_URL'] = $dbUrl;
+
+        putenv("DB_SSLMODE={$sslmode}");
+        $_ENV['DB_SSLMODE'] = $sslmode;
+        $_SERVER['DB_SSLMODE'] = $sslmode;
     }
 
     // Force debug mode to see exactly what is failing
