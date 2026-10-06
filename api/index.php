@@ -42,8 +42,8 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') == "1") {
             $parsed = parse_url($dbUrl);
             if (isset($parsed['host'])) {
                 $endpoint = explode('.', $parsed['host'])[0];
-                $separator = (strpos($dbUrl, '?') !== false) ? '&' : '?';
-                $dbUrl .= $separator . "options=endpoint%3D" . $endpoint;
+                // Append to sslmode to avoid Laravel array_diff_key crash on 'options'
+                $dbUrl = str_replace('sslmode=require', 'sslmode=require;options=endpoint%3D' . $endpoint, $dbUrl);
             }
         }
 
@@ -59,8 +59,7 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') == "1") {
             $parsed = parse_url($dbUrl);
             if (isset($parsed['host'])) {
                 $endpoint = explode('.', $parsed['host'])[0];
-                $separator = (strpos($dbUrl, '?') !== false) ? '&' : '?';
-                $dbUrl .= $separator . "options=endpoint%3D" . $endpoint;
+                $dbUrl = str_replace('sslmode=require', 'sslmode=require;options=endpoint%3D' . $endpoint, $dbUrl);
             }
         }
 
