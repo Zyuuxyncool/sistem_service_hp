@@ -7,12 +7,12 @@ class TransaksiPembayaranService extends Service
 {
     public function search($params = [])
     {
-        $transaksi = TransaksiPembayaran::query()->orderBy('id');
+        $transaksi = TransaksiPembayaran::query()->with(['pekerjaanServis.pelanggan'])->orderBy('id');
 
         $metode_bayar = $params['metode_bayar'] ?? '';
         if ($metode_bayar !== '') $transaksi->where('metode_bayar', 'like', "%{$metode_bayar}%");
 
-        $transaksi = $this->searchFilter($params, $transaksi, ['pekerjaan_servis_id', 'user_id', 'status_pembayaran']);
+        $transaksi = $this->searchFilter($params, $transaksi, ['pekerjaan_servis_id', 'status_pembayaran']);
 
         return $this->searchResponse($params, $transaksi);
     }
@@ -63,5 +63,13 @@ class TransaksiPembayaranService extends Service
     public function list_status()
     {
         return TransaksiPembayaran::STATUS_PEMBAYARAN;
+    }
+
+    public function getMonthlyRevenue()
+    {
+        return TransaksiPembayaran::where('status_pembayaran', 2)
+            ->whereMonth('waktu_bayar', \Carbon\Carbon::now()->month)
+            ->whereYear('waktu_bayar', \Carbon\Carbon::now()->year)
+            ->sum('total_bayar');
     }
 }

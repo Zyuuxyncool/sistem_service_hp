@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('password')->nullable(); // Dibuat nullable karena bisa login via Google
             $table->string('google_id')->nullable()->unique(); // Menyimpan ID dari Google
             $table->string('avatar')->nullable(); // Menyimpan foto profil Google
-            $table->smallInteger('akses')->default(2); // 1 = Admin, 2 = Pelanggan
+            $table->string('akses'); 
             $table->rememberToken();
             $table->timestamps();
         });

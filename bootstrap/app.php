@@ -21,6 +21,14 @@ return Application::configure(basePath: dirname(__DIR__))
             'io' => \App\Http\Middleware\IoMiddleware::class,
         ]);
 
+        $middleware->redirectTo(
+            users: function (Request $request) {
+                $menuService = new \App\Services\MenuService();
+                $role = $request->user()->akses ?? '';
+                return route($menuService->home_route($role));
+            }
+        );
+
         $middleware->web(append: [
             HandleAppearance::class,
             HandleInertiaRequests::class,

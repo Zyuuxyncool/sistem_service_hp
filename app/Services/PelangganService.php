@@ -7,7 +7,7 @@ class PelangganService extends Service
 {
     public function search($params = [])
     {
-        $pelanggan = Pelanggan::query()->orderBy('id');
+        $pelanggan = Pelanggan::query()->with([])->orderBy('id');
 
         $nama_pelanggan = $params['nama_pelanggan'] ?? '';
         if ($nama_pelanggan !== '') $pelanggan->where('nama_pelanggan', 'like', "%{$nama_pelanggan}%");
@@ -15,7 +15,7 @@ class PelangganService extends Service
         $nomor_wa = $params['nomor_wa'] ?? '';
         if ($nomor_wa !== '') $pelanggan->where('nomor_wa', 'like', "%{$nomor_wa}%");
 
-        $pelanggan = $this->searchFilter($params, $pelanggan, ['user_id']);
+        $pelanggan = $this->searchFilter($params, $pelanggan, []);
 
         return $this->searchResponse($params, $pelanggan);
     }

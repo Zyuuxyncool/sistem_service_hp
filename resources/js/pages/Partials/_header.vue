@@ -1,39 +1,25 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
-import { ref, onMounted, onUnmounted } from 'vue';
+import { Cpu, LogIn } from '@lucide/vue';
 
-defineProps({
-    canLogin: Boolean
-});
-
-const isScrolled = ref(false);
-
-const handleScroll = () => {
-    isScrolled.value = window.scrollY > 50;
-};
-
-onMounted(() => window.addEventListener('scroll', handleScroll));
-onUnmounted(() => window.removeEventListener('scroll', handleScroll));
+defineProps({ canLogin: Boolean });
 </script>
 
 <template>
-    <nav :class="[
-        'fixed top-0 w-full z-50 transition-all duration-300 hidden lg:block',
-        isScrolled ? 'bg-white/90 backdrop-blur-md shadow-md py-3' : 'bg-white/80 backdrop-blur-sm border-b border-white/30 py-5'
-    ]">
-        <div class="container mx-auto px-4 flex justify-between items-center max-w-7xl">
-            <a href="#" class="flex items-center gap-3 text-xl font-bold text-gray-900">
-                <div class="bg-blue-600 text-white w-10 h-10 flex items-center justify-center rounded-xl shadow-sm">
-                    <ion-icon name="construct" class="text-xl"></ion-icon>
-                </div>
-                K3N @ROX Service
-            </a>
-            <div class="flex items-center gap-8 font-semibold text-gray-600">
-                <a href="#beranda" class="hover:text-blue-600 transition-colors">Beranda</a>
-                <a href="#layanan" class="hover:text-blue-600 transition-colors">Layanan</a>
-                <a href="#alur" class="hover:text-blue-600 transition-colors">Cara Kerja</a>
-                <Link v-if="canLogin" href="/login" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all">
-                    Login Sistem <ion-icon name="log-in-outline" class="text-xl"></ion-icon>
+    <nav class="hidden lg:block bg-white border-b border-gray-200 fixed top-0 w-full z-50">
+        <div class="max-w-7xl mx-auto px-8 h-16 flex justify-between items-center">
+            <Link href="/" class="flex items-center gap-2 text-lg font-bold text-gray-900">
+                <Cpu class="text-blue-600 w-6 h-6" />
+                K3N @ROX
+            </Link>
+            <div class="flex items-center gap-8 text-sm font-medium text-gray-600">
+                <Link href="/" :class="['transition-colors', $page.url === '/' ? 'text-gray-900 font-bold' : 'hover:text-gray-900']">Beranda</Link>
+                <Link href="/layanan" :class="['transition-colors', $page.url.startsWith('/layanan') ? 'text-gray-900 font-bold' : 'hover:text-gray-900']">Layanan</Link>
+                <Link href="/prosedur" :class="['transition-colors', $page.url.startsWith('/prosedur') ? 'text-gray-900 font-bold' : 'hover:text-gray-900']">Prosedur</Link>
+                <div class="w-px h-4 bg-gray-300"></div>
+                <Link v-if="canLogin" href="/login" class="flex items-center gap-2 text-blue-600 hover:text-blue-700">
+                    <LogIn class="w-5 h-5" />
+                    <span>Login</span>
                 </Link>
             </div>
         </div>

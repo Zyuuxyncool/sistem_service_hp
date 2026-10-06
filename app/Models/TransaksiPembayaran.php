@@ -9,7 +9,6 @@ class TransaksiPembayaran extends Model
     
     protected $fillable = [
         'pekerjaan_servis_id',
-        'user_id',
         'total_bayar',
         'metode_bayar',
         'status_pembayaran',
@@ -26,8 +25,4 @@ class TransaksiPembayaran extends Model
         return $this->belongsTo(PekerjaanServis::class, 'pekerjaan_servis_id', 'id');
     }
 
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id', 'id');
-    }
 }

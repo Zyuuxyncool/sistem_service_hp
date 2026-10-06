@@ -59,4 +59,9 @@ class SukuCadangService extends Service
         }
         return $result;
     }
+
+    public function getLowStockCount($threshold = 10)
+    {
+        return SukuCadang::where('jumlah_stok', '<=', $threshold)->count();
+    }
 }

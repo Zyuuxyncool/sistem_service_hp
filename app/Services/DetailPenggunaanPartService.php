@@ -7,7 +7,7 @@ class DetailPenggunaanPartService extends Service
 {
     public function search($params = [])
     {
-        $detail = DetailPenggunaanPart::query()->orderBy('id');
+        $detail = DetailPenggunaanPart::query()->with(['pekerjaanServis.pelanggan', 'sukuCadang'])->orderBy('id');
 
         $detail = $this->searchFilter($params, $detail, ['pekerjaan_servis_id', 'suku_cadang_id']);
 

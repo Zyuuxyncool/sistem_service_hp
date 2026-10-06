@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Services\PekerjaanServisService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\TransaksiPembayaranService;
@@ -9,11 +10,12 @@ use Inertia\Inertia;
 
 class TransaksiPembayaranController extends Controller
 {
-    protected $service;
+    protected $service, $pekerjaanServisService;
     
     public function __construct()
     {
         $this->service = new TransaksiPembayaranService();
+        $this->pekerjaanServisService = new PekerjaanServisService();
         Inertia::share('list_status', $this->service->list_status());
     }
 
@@ -22,7 +24,12 @@ class TransaksiPembayaranController extends Controller
         $transaksi = $this->service->search($request->all());
         $filters = $request->only(['metode_bayar']);
 
-        return Inertia::render('TransaksiPembayaran/Index', compact('transaksi', 'filters'));
+        $pekerjaan_servis_list = $this->pekerjaanServisService->search(['limit' => 1000, 'with' => 'pelanggan'])->map(function($item) {
+            $item->id_label = ($item->pelanggan->nama_pelanggan ?? 'Unknown') . " - (Service #" . $item->id . " / " . ($item->tipe_hp ?? 'HP') . ")";
+            return $item;
+        });
+
+        return Inertia::render('TransaksiPembayaran/Index', compact('transaksi', 'filters', 'pekerjaan_servis_list'));
     }
 
     public function store(Request $request)

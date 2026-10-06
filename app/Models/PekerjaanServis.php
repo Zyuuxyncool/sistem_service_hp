@@ -9,7 +9,6 @@ class PekerjaanServis extends Model
     
     protected $fillable = [
         'pelanggan_id',
-        'user_id',
         'tipe_hp',
         'nomor_imei',
         'keluhan',
@@ -28,11 +27,6 @@ class PekerjaanServis extends Model
         5 => 'Diambil / Lunas',
         6 => 'Batal'
     ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id', 'id');
-    }
 
     public function pelanggan()
     {

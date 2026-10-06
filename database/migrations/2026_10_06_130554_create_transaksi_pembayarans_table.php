@@ -11,7 +11,6 @@ return new class extends Migration
         Schema::create('transaksi_pembayaran', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pekerjaan_servis_id')->constrained('pekerjaan_servis')->onDelete('cascade');
-            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null'); // kasir yang menerima pembayaran
             $table->integer('total_bayar');
             $table->string('metode_bayar'); // Tunai, Transfer, dll
             $table->smallInteger('status_pembayaran')->default(1);

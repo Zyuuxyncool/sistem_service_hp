@@ -21,7 +21,21 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(
+            \Laravel\Fortify\Contracts\LoginResponse::class,
+            function () {
+                return new class implements \Laravel\Fortify\Contracts\LoginResponse {
+                    public function toResponse($request)
+                    {
+                        $menuService = new \App\Services\MenuService();
+                        $role = $request->user()->akses ?? '';
+                        $prefix = $menuService->home_route($role); 
+                        
+                        return redirect()->route($prefix);
+                    }
+                };
+            }
+        );
     }
 
     /**

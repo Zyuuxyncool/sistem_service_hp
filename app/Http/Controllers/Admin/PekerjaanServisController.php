@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Services\PelangganService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\PekerjaanServisService;
@@ -9,11 +10,12 @@ use Inertia\Inertia;
 
 class PekerjaanServisController extends Controller
 {
-    protected $service;
+    protected $service, $pelangganService;
     
     public function __construct()
     {
         $this->service = new PekerjaanServisService();
+        $this->pelangganService = new PelangganService();
         Inertia::share('list_status', $this->service->list_status());
     }
 
@@ -22,7 +24,9 @@ class PekerjaanServisController extends Controller
         $pekerjaan_servis = $this->service->search($request->all());
         $filters = $request->only(['status_servis', 'tipe_hp']);
 
-        return Inertia::render('PekerjaanServis/Index', compact('pekerjaan_servis', 'filters'));
+        $pelanggan_list = $this->pelangganService->search(['limit' => 1000]);
+
+        return Inertia::render('PekerjaanServis/Index', compact('pekerjaan_servis', 'filters', 'pelanggan_list'));
     }
 
     public function store(Request $request)

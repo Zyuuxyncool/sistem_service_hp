@@ -1,29 +1,27 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
-
-defineProps({
-    canLogin: Boolean
-});
+import { Home, LayoutGrid, Info, LogIn } from '@lucide/vue';
+defineProps({ canLogin: Boolean });
 </script>
 
 <template>
-    <div class="fixed bottom-0 w-full bg-white/95 backdrop-blur-lg border-t border-gray-100 shadow-[0_-5px_20px_rgba(0,0,0,0.05)] z-[1030] lg:hidden h-[70px]">
-        <div class="flex justify-around items-center h-full text-gray-500">
-            <a href="#beranda" class="flex flex-col items-center gap-1 hover:text-blue-600 transition-colors">
-                <ion-icon name="home-outline" class="text-2xl"></ion-icon>
-                <span class="text-[10px] font-semibold">Beranda</span>
-            </a>
-            <a href="#layanan" class="flex flex-col items-center gap-1 hover:text-blue-600 transition-colors">
-                <ion-icon name="layers-outline" class="text-2xl"></ion-icon>
-                <span class="text-[10px] font-semibold">Layanan</span>
-            </a>
-            <a href="#alur" class="flex flex-col items-center gap-1 hover:text-blue-600 transition-colors">
-                <ion-icon name="sync-circle-outline" class="text-2xl"></ion-icon>
-                <span class="text-[10px] font-semibold">Alur</span>
-            </a>
-            <Link v-if="canLogin" href="/login" class="flex flex-col items-center gap-1 text-blue-600">
-                <ion-icon name="log-in-outline" class="text-2xl"></ion-icon>
-                <span class="text-[10px] font-semibold">Login</span>
+    <div class="lg:hidden fixed bottom-0 w-full bg-white border-t border-gray-200 z-50 h-[70px] pb-safe">
+        <div class="grid grid-cols-4 h-full">
+            <Link href="/" :class="['flex flex-col justify-center items-center gap-1 transition-colors', $page.url === '/' ? 'text-blue-600' : 'text-gray-500 hover:text-blue-600']">
+                <Home class="w-5 h-5" />
+                <span class="text-[10px] font-medium">Beranda</span>
+            </Link>
+            <Link href="/layanan" :class="['flex flex-col justify-center items-center gap-1 transition-colors', $page.url.startsWith('/layanan') ? 'text-blue-600' : 'text-gray-500 hover:text-blue-600']">
+                <LayoutGrid class="w-5 h-5" />
+                <span class="text-[10px] font-medium">Layanan</span>
+            </Link>
+            <Link href="/prosedur" :class="['flex flex-col justify-center items-center gap-1 transition-colors', $page.url.startsWith('/prosedur') ? 'text-blue-600' : 'text-gray-500 hover:text-blue-600']">
+                <Info class="w-5 h-5" />
+                <span class="text-[10px] font-medium">Prosedur</span>
+            </Link>
+            <Link v-if="canLogin" href="/login" class="flex flex-col justify-center items-center gap-1 text-blue-600 font-medium">
+                <LogIn class="w-5 h-5" />
+                <span class="text-[10px]">Masuk</span>
             </Link>
         </div>
     </div>

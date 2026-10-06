@@ -7,7 +7,7 @@ class PekerjaanServisService extends Service
 {
     public function search($params = [])
     {
-        $pekerjaan = PekerjaanServis::query()->orderBy('id');
+        $pekerjaan = PekerjaanServis::query()->with(['pelanggan'])->orderBy('id');
 
         $tipe_hp = $params['tipe_hp'] ?? '';
         if ($tipe_hp !== '') $pekerjaan->where('tipe_hp', 'like', "%{$tipe_hp}%");
@@ -18,7 +18,7 @@ class PekerjaanServisService extends Service
         $keluhan = $params['keluhan'] ?? '';
         if ($keluhan !== '') $pekerjaan->where('keluhan', 'like', "%{$keluhan}%");
 
-        $pekerjaan = $this->searchFilter($params, $pekerjaan, ['pelanggan_id', 'user_id', 'status_servis']);
+        $pekerjaan = $this->searchFilter($params, $pekerjaan, ['pelanggan_id', 'status_servis']);
 
         return $this->searchResponse($params, $pekerjaan);
     }
@@ -69,5 +69,29 @@ class PekerjaanServisService extends Service
     public function list_status()
     {
         return PekerjaanServis::STATUS_SERVIS;
+    }
+
+    public function getActiveCount()
+    {
+        return PekerjaanServis::whereIn('status_servis', [1, 2, 3])->count();
+    }
+
+    public function getRecentActivity($limit = 5)
+    {
+        return PekerjaanServis::with(['pelanggan'])
+            ->orderBy('created_at', 'desc')
+            ->take($limit)
+            ->get()
+            ->map(function ($servis) {
+                return [
+                    'id' => $servis->id,
+                    'pelanggan' => $servis->pelanggan->nama_pelanggan ?? 'Unknown',
+                    'tipe_hp' => $servis->tipe_hp,
+                    'status_id' => $servis->status_servis,
+                    'status_text' => PekerjaanServis::STATUS_SERVIS[$servis->status_servis] ?? 'Unknown',
+                    'keluhan' => $servis->keluhan,
+                    'waktu' => $servis->created_at->diffForHumans(),
+                ];
+            });
     }
 }

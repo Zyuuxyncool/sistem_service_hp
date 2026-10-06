@@ -8,10 +8,10 @@ class Pelanggan extends Model
     protected $table = 'pelanggan';
     
     protected $fillable = [
-        'user_id',
         'nama_pelanggan',
         'nomor_wa',
-        'alamat'
+        'alamat',
+        'user_id'
     ];
 
     public function user()
