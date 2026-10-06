@@ -46,6 +46,11 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') == "1") {
         $_ENV['DB_URL'] = $dbUrl;
         $_SERVER['DB_URL'] = $dbUrl;
     }
+
+    // Force debug mode to see exactly what is failing
+    putenv("APP_DEBUG=true");
+    $_ENV['APP_DEBUG'] = 'true';
+    $_SERVER['APP_DEBUG'] = 'true';
 }
 
 // Forward Vercel requests to normal index.php
