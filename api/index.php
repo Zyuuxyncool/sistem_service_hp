@@ -51,7 +51,7 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') == "1") {
             $parsed = parse_url($dbUrl);
             if (isset($parsed['host'])) {
                 $endpoint = explode('.', $parsed['host'])[0];
-                $sslmode = 'require;options=endpoint%3D' . $endpoint;
+                $sslmode = 'require;options=endpoint=' . $endpoint;
             }
             // Remove sslmode from DB_URL so Laravel doesn't override DB_SSLMODE
             $dbUrl = str_replace('?sslmode=require', '', $dbUrl);
