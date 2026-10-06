@@ -32,6 +32,20 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') == "1") {
         $_ENV[$key] = $val;
         $_SERVER[$key] = $val;
     }
+
+    // Map Vercel Postgres URL to Laravel's DB_URL
+    if (isset($_ENV['DATABASE_URL']) || getenv('DATABASE_URL')) {
+        $dbUrl = isset($_ENV['DATABASE_URL']) ? $_ENV['DATABASE_URL'] : getenv('DATABASE_URL');
+        putenv("DB_URL={$dbUrl}");
+        $_ENV['DB_URL'] = $dbUrl;
+        $_SERVER['DB_URL'] = $dbUrl;
+    }
+    if (isset($_ENV['POSTGRES_URL']) || getenv('POSTGRES_URL')) {
+        $dbUrl = isset($_ENV['POSTGRES_URL']) ? $_ENV['POSTGRES_URL'] : getenv('POSTGRES_URL');
+        putenv("DB_URL={$dbUrl}");
+        $_ENV['DB_URL'] = $dbUrl;
+        $_SERVER['DB_URL'] = $dbUrl;
+    }
 }
 
 // Forward Vercel requests to normal index.php
