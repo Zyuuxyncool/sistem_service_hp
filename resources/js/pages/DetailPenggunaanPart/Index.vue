@@ -113,7 +113,7 @@ const getFilteredItems = computed(() => {
     });
 });
 
-const totalPages = computed(() => Math.ceil(getFilteredItems.value.length / itemsPerPage));
+const totalPages = computed(() => Math.max(1, Math.ceil(getFilteredItems.value.length / itemsPerPage)));
 
 const getPaginatedItems = computed(() => {
     const start = (currentPage.value - 1) * itemsPerPage;
@@ -180,7 +180,7 @@ const formatRupiah = (number: any) => {
                 </table>
             </div>
             
-            <div class="p-4 border-t dark:border-zinc-700 flex items-center justify-between" v-if="totalPages > 1">
+            <div class="p-4 border-t dark:border-zinc-700 flex items-center justify-between">
                 <span class="text-sm text-gray-600 dark:text-gray-400">
                     Menampilkan halaman {{ currentPage }} dari {{ totalPages }}
                 </span>
