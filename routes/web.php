@@ -6,7 +6,8 @@ Route::inertia('/', 'Landing/Index')->name('home');
 Route::inertia('/layanan', 'Landing/Layanan')->name('layanan');
 Route::inertia('/prosedur', 'Landing/Prosedur')->name('prosedur');
 
-
+Route::get('/auth/google', [\App\Http\Controllers\Auth\GoogleAuthController::class, 'redirect'])->name('google.login');
+Route::get('/auth/google/callback', [\App\Http\Controllers\Auth\GoogleAuthController::class, 'callback']);
 
 Route::middleware(['auth', 'verified', 'io'])->group(function () {
     Route::get('/dashboard', function (Illuminate\Http\Request $request) {
