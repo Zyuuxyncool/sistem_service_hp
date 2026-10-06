@@ -10,6 +10,11 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    public const HAK_AKSES = [
+        'Admin' => 'Admin',
+        'Pelanggan' => 'Pelanggan',
+    ];
+
     protected $fillable = [
         'name',
         'email',

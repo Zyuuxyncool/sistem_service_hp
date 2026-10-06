@@ -12,6 +12,7 @@ Route::name('.')->group(function () {
     // Riwayat Servis
     Route::get('/riwayat-servis', [\App\Http\Controllers\Pelanggan\RiwayatServisController::class, 'index'])->name('riwayat_servis.index');
     Route::post('/riwayat-servis/{id}/bayar', [\App\Http\Controllers\Pelanggan\RiwayatServisController::class, 'bayar'])->name('riwayat_servis.bayar');
+    Route::post('/riwayat-servis/{id}/cancel', [\App\Http\Controllers\Pelanggan\RiwayatServisController::class, 'cancel'])->name('riwayat_servis.cancel');
 
     // Penilaian (Kosong dulu)
     Route::inertia('/penilaian-servis', 'Pelanggan/Penilaian/Index')->name('penilaian_servis.index');

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, useForm, router } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -61,6 +61,33 @@ const submitPayment = () => {
     });
 };
 
+const cancelServis = (id: number) => {
+    Swal.fire({
+        title: 'Batalkan Pendaftaran?',
+        text: 'Apakah Anda yakin ingin membatalkan pendaftaran servis ini?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'Ya, Batalkan!',
+        cancelButtonText: 'Tutup'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            router.post(`/pelanggan/riwayat-servis/${id}/cancel`, {}, {
+                onSuccess: () => {
+                    Swal.fire({
+                        title: 'Dibatalkan!',
+                        text: 'Pendaftaran servis telah dibatalkan.',
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        }
+    });
+};
+
 </script>
 
 <template>
@@ -75,12 +102,15 @@ const submitPayment = () => {
         <div class="space-y-6">
             <Card v-for="servis in props.riwayat" :key="servis.id" class="overflow-hidden">
                 <CardHeader class="bg-zinc-50/50 border-b border-zinc-100 pb-4">
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-start justify-between">
                         <div>
                             <CardTitle class="text-lg">{{ servis.tipe_hp }}</CardTitle>
                             <CardDescription class="mt-1">Tanggal Masuk: {{ servis.waktu }}</CardDescription>
                         </div>
-                        <Badge :class="getStatusBadge(servis.status_id).class" class="text-sm px-3 py-1">{{ servis.status_text }}</Badge>
+                        <div class="flex flex-col items-end gap-2">
+                            <Badge :class="getStatusBadge(servis.status_id).class" class="text-sm px-3 py-1">{{ servis.status_text }}</Badge>
+                            <Button v-if="servis.status_id === 1" variant="outline" size="sm" class="text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700" @click="cancelServis(servis.id)">Batalkan</Button>
+                        </div>
                     </div>
                 </CardHeader>
                 <CardContent class="p-6">

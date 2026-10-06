@@ -30,7 +30,7 @@ class RiwayatServisController extends Controller
                 'catatan_teknisi' => $item->catatan_teknisi,
                 'biaya_jasa' => $item->biaya_jasa,
                 'status_id' => $item->status_servis,
-                'status_text' => config('status.list_status')[$item->status_servis] ?? 'Menunggu',
+                'status_text' => PekerjaanServis::STATUS_SERVIS[$item->status_servis] ?? 'Menunggu',
                 'waktu' => $item->created_at->format('d M Y H:i'),
                 'parts' => $item->detailPenggunaanPart->map(function($part) {
                     return [
@@ -73,5 +73,20 @@ class RiwayatServisController extends Controller
         );
 
         return redirect()->back()->with('message', 'Permintaan pembayaran dengan metode ' . $request->metode_bayar . ' berhasil dikirim! Silakan ikuti instruksi pembayaran.');
+    }
+
+    public function cancel(Request $request, $id)
+    {
+        $servis = PekerjaanServis::findOrFail($id);
+        
+        // Hanya bisa dibatalkan jika milik pelanggan ini dan statusnya masih "Diterima" (1)
+        if ($servis->pelanggan_id != $request->user()->pelanggan->id) abort(403);
+        
+        if ($servis->status_servis == 1) {
+            $servis->update(['status_servis' => 6]); // 6 = Batal
+            return redirect()->back()->with('message', 'Pendaftaran servis berhasil dibatalkan.');
+        }
+
+        return redirect()->back()->withErrors(['message' => 'Servis tidak dapat dibatalkan karena sudah diproses teknisi.']);
     }
 }

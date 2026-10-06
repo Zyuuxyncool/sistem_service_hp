@@ -30,7 +30,7 @@ class DashboardController extends Controller
                     'id' => $item->id,
                     'tipe_hp' => $item->tipe_hp,
                     'status_id' => $item->status_servis,
-                    'status_text' => config('status.list_status')[$item->status_servis] ?? 'Menunggu',
+                    'status_text' => PekerjaanServis::STATUS_SERVIS[$item->status_servis] ?? 'Menunggu',
                     'keluhan' => $item->keluhan,
                     'waktu' => $item->created_at->diffForHumans(),
                 ];

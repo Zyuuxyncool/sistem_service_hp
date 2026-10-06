@@ -25,9 +25,6 @@ class MenuService
 
     protected static array $pelanggan = [
         'pelanggan' => ['route' => 'pelanggan', 'caption' => 'Beranda', 'icon' => 'home', 'show_mobile' => true],
-
-        'katalog' => ['route' => 'pelanggan.katalog.index', 'caption' => 'Katalog Laptop', 'icon' => 'monitor', 'show_mobile' => true],
-
         'perbaikan' => ['route' => '#', 'caption' => 'Layanan Servis', 'icon' => 'build', 'show_mobile' => true, 'sub_menus' => [
             'pendaftaran_servis' => ['route' => 'pelanggan.pendaftaran_servis.index', 'caption' => 'Pendaftaran Servis'],
             'riwayat_servis' => ['route' => 'pelanggan.riwayat_servis.index', 'caption' => 'Riwayat Servis'],
