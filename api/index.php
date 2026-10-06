@@ -36,12 +36,34 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') == "1") {
     // Map Vercel Postgres URL to Laravel's DB_URL
     if (isset($_ENV['DATABASE_URL']) || getenv('DATABASE_URL')) {
         $dbUrl = isset($_ENV['DATABASE_URL']) ? $_ENV['DATABASE_URL'] : getenv('DATABASE_URL');
+        
+        // Neon SNI workaround for Vercel's older libpq
+        if (strpos($dbUrl, 'neon.tech') !== false) {
+            $parsed = parse_url($dbUrl);
+            if (isset($parsed['host'])) {
+                $endpoint = explode('.', $parsed['host'])[0];
+                $separator = (strpos($dbUrl, '?') !== false) ? '&' : '?';
+                $dbUrl .= $separator . "options=endpoint%3D" . $endpoint;
+            }
+        }
+
         putenv("DB_URL={$dbUrl}");
         $_ENV['DB_URL'] = $dbUrl;
         $_SERVER['DB_URL'] = $dbUrl;
     }
     if (isset($_ENV['POSTGRES_URL']) || getenv('POSTGRES_URL')) {
         $dbUrl = isset($_ENV['POSTGRES_URL']) ? $_ENV['POSTGRES_URL'] : getenv('POSTGRES_URL');
+        
+        // Neon SNI workaround for Vercel's older libpq
+        if (strpos($dbUrl, 'neon.tech') !== false) {
+            $parsed = parse_url($dbUrl);
+            if (isset($parsed['host'])) {
+                $endpoint = explode('.', $parsed['host'])[0];
+                $separator = (strpos($dbUrl, '?') !== false) ? '&' : '?';
+                $dbUrl .= $separator . "options=endpoint%3D" . $endpoint;
+            }
+        }
+
         putenv("DB_URL={$dbUrl}");
         $_ENV['DB_URL'] = $dbUrl;
         $_SERVER['DB_URL'] = $dbUrl;
