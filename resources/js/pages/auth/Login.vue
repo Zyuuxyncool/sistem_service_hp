@@ -36,6 +36,13 @@ defineProps<{
         {{ status }}
     </div>
 
+    <div
+        v-if="$page.props.flash.error"
+        class="mb-4 text-center text-sm font-medium text-red-600 bg-red-50 dark:bg-red-900/30 p-3 rounded-lg"
+    >
+        {{ $page.props.flash.error }}
+    </div>
+
     <PasskeyVerify />
 
     <Form
