@@ -32,11 +32,29 @@ class GoogleAuthController extends Controller
                     'password' => Hash::make(Str::random(16)),
                     'akses' => 'Pelanggan', 
                 ]);
+
+                \App\Models\Pelanggan::create([
+                    'user_id' => $user->id,
+                    'nama_pelanggan' => $googleUser->name,
+                    'nomor_wa' => '', 
+                    'alamat' => '',
+                ]);
             } else {
                 $user->update([
                     'google_id' => $googleUser->id,
                     'avatar' => $googleUser->avatar,
                 ]);
+            }
+            
+            if (!$user->pelanggan) {
+                \App\Models\Pelanggan::create([
+                    'user_id' => $user->id,
+                    'nama_pelanggan' => $user->name,
+                    'nomor_wa' => '', 
+                    'alamat' => '',
+                ]);
+                // Refresh relasi
+                $user->load('pelanggan');
             }
 
             Auth::login($user);
