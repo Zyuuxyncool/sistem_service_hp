@@ -21,7 +21,7 @@ class IoMiddleware
                 $head_route = head(explode('.', $current_route));
                 $home_route = $menuService->home_route($user->akses ?? '');
 
-                if ($head_route !== '' && $head_route !== $home_route && $head_route !== 'profile') {
+                if ($head_route !== '' && $head_route !== $home_route && $head_route !== 'profile' && $head_route !== 'dashboard') {
                     abort(404);
                 }
             }
