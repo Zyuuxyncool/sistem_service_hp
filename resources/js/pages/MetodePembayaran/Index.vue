@@ -170,7 +170,7 @@ const nextPage = () => {
                             <td class="px-6 py-4">{{ item.no_rekening || '-' }}</td>
                             <td class="px-6 py-4">{{ item.atas_nama || '-' }}</td>
                             <td class="px-6 py-4">
-                                <a v-if="item.foto_qris" :href="`/storage/${item.foto_qris}`" target="_blank" class="text-blue-500 hover:underline">
+                                <a v-if="item.foto_qris_url" :href="item.foto_qris_url" target="_blank" class="text-blue-500 hover:underline">
                                     Lihat QRIS
                                 </a>
                                 <span v-else class="text-gray-400">-</span>

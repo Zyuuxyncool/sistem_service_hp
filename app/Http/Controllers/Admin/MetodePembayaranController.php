@@ -37,7 +37,7 @@ class MetodePembayaranController extends Controller
         $data['is_active'] = $request->boolean('is_active', true);
 
         if ($request->hasFile('foto_qris')) {
-            $data['foto_qris'] = $request->file('foto_qris')->store('qris', 'public');
+            $data['foto_qris'] = $request->file('foto_qris')->store('qris', 's3');
         }
 
         MetodePembayaran::create($data);
@@ -60,9 +60,9 @@ class MetodePembayaranController extends Controller
 
         if ($request->hasFile('foto_qris')) {
             if ($metode->foto_qris) {
-                Storage::disk('public')->delete($metode->foto_qris);
+                Storage::disk('s3')->delete($metode->foto_qris);
             }
-            $data['foto_qris'] = $request->file('foto_qris')->store('qris', 'public');
+            $data['foto_qris'] = $request->file('foto_qris')->store('qris', 's3');
         }
 
         $metode->update($data);
@@ -74,7 +74,7 @@ class MetodePembayaranController extends Controller
     {
         $metode = MetodePembayaran::findOrFail($id);
         if ($metode->foto_qris) {
-            Storage::disk('public')->delete($metode->foto_qris);
+            Storage::disk('s3')->delete($metode->foto_qris);
         }
         $metode->delete();
 
