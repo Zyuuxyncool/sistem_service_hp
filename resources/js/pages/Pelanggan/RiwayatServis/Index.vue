@@ -7,13 +7,14 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import Swal from 'sweetalert2';
 
 defineOptions({ layout: AppLayout });
 
 const props = defineProps<{
     riwayat: any[];
+    metode_pembayaran: any[];
 }>();
 
 const formatRupiah = (number: any) => {
@@ -38,6 +39,10 @@ const selectedServis = ref<any>(null);
 
 const form = useForm({
     metode_bayar: '',
+});
+
+const selectedMetodeDetails = computed(() => {
+    return props.metode_pembayaran.find((m: any) => m.nama === form.metode_bayar);
 });
 
 const openPaymentModal = (servis: any) => {
@@ -186,18 +191,29 @@ const cancelServis = (id: number) => {
                                 <SelectValue placeholder="Pilih metode pembayaran" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="Tunai di Toko">Tunai (Bayar di Toko)</SelectItem>
-                                <SelectItem value="Transfer Bank BCA">Transfer Bank BCA</SelectItem>
-                                <SelectItem value="Transfer Bank Mandiri">Transfer Bank Mandiri</SelectItem>
-                                <SelectItem value="Gopay / QRIS">Gopay / QRIS</SelectItem>
+                                <SelectItem v-for="metode in props.metode_pembayaran" :key="metode.id" :value="metode.nama">
+                                    {{ metode.nama }}
+                                </SelectItem>
                             </SelectContent>
                         </Select>
                         <div v-if="form.errors.metode_bayar" class="text-sm text-red-500">{{ form.errors.metode_bayar }}</div>
                     </div>
 
-                    <div v-if="form.metode_bayar && form.metode_bayar !== 'Tunai di Toko'" class="p-4 bg-blue-50 text-blue-800 rounded-lg text-sm border border-blue-100">
-                        <p class="font-semibold mb-1">Instruksi Pembayaran:</p>
-                        <p>Silakan transfer sesuai nominal ke nomor rekening yang akan diberikan oleh Admin via WhatsApp, lalu upload bukti transfer di WhatsApp.</p>
+                    <div v-if="selectedMetodeDetails && (selectedMetodeDetails.no_rekening || selectedMetodeDetails.foto_qris)" class="p-4 bg-blue-50 text-blue-800 rounded-lg text-sm border border-blue-100">
+                        <p class="font-semibold mb-2">Instruksi Pembayaran:</p>
+                        
+                        <div v-if="selectedMetodeDetails.no_rekening" class="mb-3">
+                            <p>Transfer ke Rekening:</p>
+                            <p class="font-bold text-lg">{{ selectedMetodeDetails.no_rekening }}</p>
+                            <p v-if="selectedMetodeDetails.atas_nama">a/n {{ selectedMetodeDetails.atas_nama }}</p>
+                        </div>
+                        
+                        <div v-if="selectedMetodeDetails.foto_qris">
+                            <p class="mb-2">Atau scan QRIS berikut:</p>
+                            <img :src="`/storage/${selectedMetodeDetails.foto_qris}`" alt="QRIS" class="w-48 h-auto rounded-lg border border-blue-200" />
+                        </div>
+                        
+                        <p class="mt-3 text-xs opacity-80 pt-2 border-t border-blue-200/50">Harap konfirmasi bukti transfer ke WhatsApp setelah melakukan pembayaran.</p>
                     </div>
 
                     <DialogFooter>

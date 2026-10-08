@@ -15,5 +15,6 @@ Route::name('.')->group(function () {
     Route::resource('transaksi_pembayaran', App\Http\Controllers\Admin\TransaksiPembayaranController::class);
 
     // Pengaturan
+    Route::resource('metode_pembayaran', App\Http\Controllers\Admin\MetodePembayaranController::class);
     Route::resource('user', App\Http\Controllers\Admin\UserController::class);
 });

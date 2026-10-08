@@ -23,6 +23,18 @@ const isOpen = ref(false);
 const isEdit = ref(false);
 const currentId = ref<number | null>(null);
 const searchQuery = ref('');
+const statusFilter = ref<string | number>('');
+
+// Detail Modal state
+const isDetailModalOpen = ref(false);
+const detailModalTitle = ref('');
+const detailModalContent = ref('');
+
+const showDetail = (title: string, content: string) => {
+    detailModalTitle.value = title;
+    detailModalContent.value = content || 'Tidak ada data.';
+    isDetailModalOpen.value = true;
+};
 
 const page = usePage();
 const getEnumOptions = (enumName: string) => {
@@ -110,14 +122,22 @@ const destroy = (id: number) => {
 };
 
 const getFilteredItems = computed(() => {
-    const items = Array.isArray(props.pekerjaan_servis) ? props.pekerjaan_servis : (props.pekerjaan_servis?.data || []);
-    if (!searchQuery.value) return items;
-    const lowerQuery = searchQuery.value.toLowerCase();
-    return items.filter(item => {
-        return Object.values(item).some(val => 
-            String(val).toLowerCase().includes(lowerQuery)
-        );
-    });
+    let items = Array.isArray(props.pekerjaan_servis) ? props.pekerjaan_servis : (props.pekerjaan_servis?.data || []);
+    
+    if (statusFilter.value !== '') {
+        items = items.filter(item => String(item.status_servis) === String(statusFilter.value));
+    }
+    
+    if (searchQuery.value) {
+        const lowerQuery = searchQuery.value.toLowerCase();
+        items = items.filter(item => {
+            return Object.values(item).some(val => 
+                String(val).toLowerCase().includes(lowerQuery)
+            );
+        });
+    }
+    
+    return items;
 });
 
 const totalPages = computed(() => Math.max(1, Math.ceil(getFilteredItems.value.length / itemsPerPage)));
@@ -150,9 +170,20 @@ const formatRupiah = (number: any) => {
             <p class="text-sm text-gray-500 dark:text-gray-400">Kelola data pekerjaan servis Anda di sini.</p>
         </div>
 
-        <div class="flex justify-between items-center">
-            <Input v-model="searchQuery" placeholder="Cari data..." class="max-w-sm" @input="currentPage = 1" />
-            <Button @click="openCreateModal">Tambah Pekerjaan Servis</Button>
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex w-full sm:w-auto items-center gap-3">
+                <Input v-model="searchQuery" placeholder="Cari data..." class="w-full sm:w-[250px]" @input="currentPage = 1" />
+                <div class="w-full sm:w-[200px]">
+                    <Combobox
+                        v-model="statusFilter"
+                        :options="[{id: '', label: 'Semua Status'}, ...getEnumOptions('list_status')]"
+                        label="label"
+                        placeholder="Semua Status"
+                        @update:modelValue="currentPage = 1"
+                    />
+                </div>
+            </div>
+            <Button @click="openCreateModal" class="w-full sm:w-auto">Tambah Pekerjaan Servis</Button>
         </div>
 
         <div class="bg-white dark:bg-zinc-900 rounded-lg shadow overflow-hidden border border-gray-100 dark:border-zinc-800">
@@ -178,14 +209,20 @@ const formatRupiah = (number: any) => {
                             <td class="px-6 py-4">{{ item.pelanggan?.nama_pelanggan || item.pelanggan_id }}</td>
                             <td class="px-6 py-4">{{ item.tipe_hp }}</td>
                             <td class="px-6 py-4">{{ item.nomor_imei }}</td>
-                            <td class="px-6 py-4">{{ item.keluhan }}</td>
+                            <td class="px-6 py-4">
+                                <Button v-if="item.keluhan" variant="outline" size="sm" @click="showDetail('Keluhan', item.keluhan)">Show</Button>
+                                <span v-else class="text-gray-400">-</span>
+                            </td>
                             <td class="px-6 py-4 font-semibold text-base whitespace-nowrap text-green-700 dark:text-green-500">{{ formatRupiah(item.biaya_jasa) }}</td>
                             <td class="px-6 py-4">
                                 <span class="px-2 py-1 bg-gray-100 dark:bg-zinc-800 rounded-md text-xs font-medium">
                                     {{ (page.props.list_status && page.props.list_status[item.status_servis]) || item.status_servis }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4">{{ item.catatan_teknisi }}</td>
+                            <td class="px-6 py-4">
+                                <Button v-if="item.catatan_teknisi" variant="outline" size="sm" @click="showDetail('Catatan Teknisi', item.catatan_teknisi)">Show</Button>
+                                <span v-else class="text-gray-400">-</span>
+                            </td>
                             <td class="px-6 py-4">{{ item.lama_garansi }}</td>
                             <td class="px-6 py-4 text-right space-x-2">
                                 <Button variant="outline" size="sm" @click="openEditModal(item)">Edit</Button>
@@ -276,6 +313,21 @@ const formatRupiah = (number: any) => {
                         <Button type="submit" :disabled="form.processing">Simpan</Button>
                     </DialogFooter>
                 </form>
+            </DialogScrollContent>
+        </Dialog>
+
+        <!-- Detail Modal for Keluhan & Catatan Teknisi -->
+        <Dialog :open="isDetailModalOpen" @update:open="isDetailModalOpen = $event">
+            <DialogScrollContent class="w-full sm:max-w-md">
+                <DialogHeader>
+                    <DialogTitle>{{ detailModalTitle }}</DialogTitle>
+                </DialogHeader>
+                <div class="py-4">
+                    <p class="text-zinc-700 dark:text-zinc-300 whitespace-pre-wrap leading-relaxed">{{ detailModalContent }}</p>
+                </div>
+                <DialogFooter>
+                    <Button type="button" @click="isDetailModalOpen = false">Tutup</Button>
+                </DialogFooter>
             </DialogScrollContent>
         </Dialog>
     </div>

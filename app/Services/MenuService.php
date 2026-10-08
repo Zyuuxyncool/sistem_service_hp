@@ -20,6 +20,7 @@ class MenuService
 
         'pengaturan' => ['route' => '#', 'caption' => 'Pengaturan', 'icon' => 'settings', 'show_mobile' => true, 'sub_menus' => [
             'user' => ['route' => 'admin.user.index', 'caption' => 'Data User'],
+            'metode_pembayaran' => ['route' => 'admin.metode_pembayaran.index', 'caption' => 'Metode Pembayaran'],
         ]],
     ];
 

